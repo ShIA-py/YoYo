@@ -49,6 +49,7 @@
         <div>
             <button class="btn" id="SignInButton">Войти</button>
             <button class="btn" id="SignUpButton">Зарегестрироваться</button>
+            <button class="btn" id="load">Download</button>
         </div>
     <script>
         //Зарегестрироваться
@@ -60,6 +61,11 @@
         document.getElementById('SignInButton').addEventListener('click', function() {
         // Простой переход
         window.location.href = "{{ url_for('sign_in') }}";});
+
+        //загрузить
+        document.getElementById('load').addEventListener('click', function() {
+        // Простой переход
+        window.location.href = "{{ url_for('download') }}";});
     </script>
     </div>
 </body>

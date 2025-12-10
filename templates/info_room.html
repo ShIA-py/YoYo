@@ -1,10 +1,62 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
+<html>
+  <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Домашняя страница <span class="username">{{ username }}</span></title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .container {
+            background-color: #f5f5f5;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        button {
+            padding: 8px 12px;
+            margin: 5px 0;
+        }
+        input {
+            padding: 8px 12px;
+            margin: 5px 0;
+        #output {
+            margin-top: 15px;
+            padding: 10px;
+            background-color: #e9f7fe;
+            border-radius: 4px;
+        }
+    </style>
 </head>
 <body>
-
-</body>
+  <div class="container">
+    <h1>{{name_room}}</h1>
+        <h2>Информация о {{ name_room }}</h2>
+      <p>ID комнаты <b>{{ id_room }}</b></p>
+      <p>Админ комнаты <b><a href="/user/{{ admin_room }}" class="admin_room">{{ admin_room }}</a></b></p>
+      <p>Комната создана <b>{{time_create}}</b></p>
+      <p>Комната создана <b>{{time_last_action}}</b></p>
+      {% if admin_user==username %}
+          <form method="POST">
+              <button type="submit" name="button" value="remove-user-to-room">Удалить Пользователя YoYo</button>
+              <button type="submit" name="button" value="add-user-to-room">Добавить пользователя YoYo</button>
+              <button type="submit" name="button" value="remove-user-to-room">Удалить комнату <b>"{{ name_room }}"</b></button>
+          </form>
+      {% endif%}
+      <h3>Участники {{name_room}}</h3>>
+      {% if user_list %}
+        {% for user in user_list %}
+            <div class="users">
+                <p><a href="/user/{{ user }}" class="user-link">{{ user }}</a></p>
+            </div>
+        {% endfor %}
+      {% else %}
+        <p>что то не так...</p>
+      {% endif %}
+    </div>
+  </body>
 </html>

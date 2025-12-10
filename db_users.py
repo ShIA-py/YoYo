@@ -67,11 +67,11 @@ def get_user_notes(username):
     """Получаем все записи пользователя из БД"""
     conn = sqlite3.connect(DB_link)
     cursor = conn.cursor()
-    try:
-        cursor.execute(f"SELECT subject, notes, time FROM {username} ORDER BY id DESC")
-        notes = cursor.fetchall()
-    except:
-        return False
+    # try:
+    cursor.execute(f"SELECT subject, notes, time FROM {username} ORDER BY id DESC")
+    notes = cursor.fetchall()
+    # except:
+    #     return False
     conn.close()
     return notes
 
@@ -290,3 +290,48 @@ def get_all_rooms_name():
 
     conn.close()
     return usernames
+
+def get_all_members_from_room(room_id):
+    """Получаем всех участников из комнаты"""
+    try:
+        conn = sqlite3.connect(DB_link_rooms)
+        cursor = conn.cursor()
+        cursor.execute("SELECT members FROM rooms WHERE id = ?", (room_id,))
+        usernames = [row[0] for row in cursor.fetchall()]
+        return usernames[0].split(',')
+    finally:
+        conn.close()
+
+def get_object_from_room(object, room_id):
+    """Получаем объект из комнаты по room_id"""
+    try:
+        conn = sqlite3.connect(DB_link_rooms)
+        cursor = conn.cursor()
+        cursor.execute(f"SELECT {object} FROM rooms WHERE id = ?", (room_id,))
+        value = [row[0] for row in cursor.fetchall()]
+        return value[0]
+    finally:
+        conn.close()
+
+
+def check_admin_room(username, id_room):
+    """Проверяем username админ ли в id_room"""
+    try:
+        conn = sqlite3.connect(DB_link_rooms)
+        cursor = conn.cursor()
+
+        # Проверяем, является ли пользователь администратором комнаты
+        cursor.execute("SELECT admin FROM rooms WHERE id = ?", (id_room,))
+        result = cursor.fetchone()
+
+        if result:
+            admin_username = result[0]
+            return admin_username == username #True если админ
+        else:
+            return False  # Комната не найдена
+
+    except sqlite3.Error as e:
+        print(f"Ошибка базы данных: {e}")
+        return False
+    finally:
+        conn.close()

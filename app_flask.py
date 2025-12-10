@@ -5,6 +5,7 @@ from flask import redirect
 from flask import url_for
 from flask import session
 from flask import jsonify
+from flask import send_file
 from difflib import get_close_matches
 from datetime import datetime
 from db_users import *
@@ -206,6 +207,25 @@ def add_user_to_room_confim(username ,id_room):
                            username=username,
                            name_room=name_room,
                            messages=messages)
+
+@app.route('/room/info/<id_room>', methods=['GET', 'POST'])
+def info_room_(id_room):
+    name_room = session.get('name_room')
+    username = session.get('username')
+    return render_template(f'info_room.html', id_room=id_room,
+                           name_room=name_room,
+                           user_list=get_all_members_from_room(id_room),
+                           time_create=get_object_from_room('time_create', id_room),
+                           admin_room=get_object_from_room('admin', id_room),
+                           time_last_action=get_object_from_room('time_last', id_room),
+                           admin_user=check_admin_room(session.get('username'), id_room))
+
+
+@app.route('/download')
+def download():
+    path='photo.png'
+    return send_file(path, as_attachment=True)
+
 
 
 
